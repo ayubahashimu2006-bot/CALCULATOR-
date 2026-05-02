@@ -3,88 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Pro Calculator Suite</title>
+<title>Pro Scientific Calculator</title>
 
 <style>
 body{
 margin:0;
 font-family:Segoe UI;
-background:#0a0f1c;
-color:white;
+background:linear-gradient(135deg,#0f172a,#020617);
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-}
-
-.app{
-display:flex;
-gap:15px;
-}
-
-.sidebar{
-width:140px;
-background:rgba(255,255,255,0.06);
-padding:10px;
-border-radius:15px;
-}
-
-button{
-width:100%;
-margin:5px 0;
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#00f7ff;
-font-weight:bold;
-}
-
-.main{
-width:420px;
-background:rgba(255,255,255,0.06);
-padding:15px;
-border-radius:20px;
-}
-
-.display{
-height:80px;
-background:black;
-color:#00f7ff;
-font-size:28px;
-text-align:right;
-padding:10px;
-border-radius:10px;
-overflow:auto;
-}
-
-.tabs{
-display:flex;
-gap:5px;
-margin:10px 0;
-}
-
-.tabs button{
-flex:1;
-background:rgba(255,255,255,0.1);
 color:white;
 }
 
-.section{display:none;}
-.active{display:block;}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:6px;
+.app{
+width:360px;
+border-radius:25px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(20px);
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
+overflow:hidden;
 }
 
-input,select{
-width:100%;
-padding:8px;
-margin:5px 0;
+/* DISPLAY */
+.display{
+padding:20px;
+font-size:32px;
+text-align:right;
+background:rgba(0,0,0,0.6);
+color:#00f7ff;
+min-height:80px;
+}
+
+/* HISTORY PANEL */
+.history{
+max-height:0;
+overflow:hidden;
+background:rgba(0,0,0,0.3);
+transition:0.3s;
+padding:0 15px;
+font-size:12px;
+color:#aaa;
+}
+
+.history.show{
+max-height:120px;
+padding:10px 15px;
+}
+
+/* BUTTONS */
+.buttons{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+padding:15px;
+}
+
+button{
+padding:18px;
 border:none;
-border-radius:8px;
+border-radius:15px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.15s;
+}
+
+button:hover{
+background:#00f7ff;
+color:black;
+transform:scale(1.05);
+}
+
+.op{color:#00f7ff;}
+.equal{
+background:#00f7ff;
+color:black;
+grid-column:span 2;
+}
+.topbar{
+display:flex;
+justify-content:space-between;
+padding:10px 15px;
+font-size:12px;
+color:#aaa;
 }
 </style>
 </head>
@@ -93,95 +97,44 @@ border-radius:8px;
 
 <div class="app">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-<button onclick="show('calc')">Calculator</button>
-<button onclick="show('unit')">Unit</button>
-<button onclick="show('currency')">Currency</button>
-<button onclick="clearAll()">Clear</button>
+<div class="topbar">
+<span>Pro Calc</span>
+<span onclick="toggleHistory()" style="cursor:pointer;">History</span>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<div class="history" id="history"></div>
 
 <div class="display" id="display">0</div>
 
-<div class="tabs">
-<button onclick="show('calc')">Calc</button>
-<button onclick="show('unit')">Unit</button>
-<button onclick="show('currency')">Currency</button>
-</div>
-
-<!-- CALCULATOR -->
-<div id="calc" class="section active">
-
-<div class="grid">
+<div class="buttons">
 
 <button onclick="append('7')">7</button>
 <button onclick="append('8')">8</button>
 <button onclick="append('9')">9</button>
-<button onclick="append('/')">÷</button>
+<button class="op" onclick="append('/')">÷</button>
 
 <button onclick="append('4')">4</button>
 <button onclick="append('5')">5</button>
 <button onclick="append('6')">6</button>
-<button onclick="append('*')">×</button>
+<button class="op" onclick="append('*')">×</button>
 
 <button onclick="append('1')">1</button>
 <button onclick="append('2')">2</button>
 <button onclick="append('3')">3</button>
-<button onclick="append('-')">−</button>
+<button class="op" onclick="append('-')">−</button>
 
 <button onclick="append('0')">0</button>
 <button onclick="append('.')">.</button>
-<button onclick="append('+')">+</button>
-<button onclick="calculate()">=</button>
+<button onclick="clearAll()">C</button>
+<button class="op" onclick="append('+')">+</button>
 
-</div>
-</div>
+<button onclick="append('Math.sin(')">sin</button>
+<button onclick="append('Math.cos(')">cos</button>
+<button onclick="append('Math.sqrt(')">√</button>
+<button onclick="append('Math.PI')">π</button>
 
-<!-- UNIT CONVERTER -->
-<div id="unit" class="section">
-
-<h3>World Unit Converter</h3>
-
-<input id="uval" placeholder="Enter value">
-
-<select id="utype">
-<option value="km-m">Km → Meter</option>
-<option value="m-km">Meter → Km</option>
-<option value="kg-g">Kg → Gram</option>
-<option value="g-kg">Gram → Kg</option>
-<option value="l-ml">Litre → ml</option>
-<option value="c-f">Celsius → Fahrenheit</option>
-<option value="f-c">Fahrenheit → Celsius</option>
-</select>
-
-<button onclick="convertUnit()">Convert</button>
-
-<p id="ures"></p>
-
-</div>
-
-<!-- CURRENCY -->
-<div id="currency" class="section">
-
-<h3>World Currency Converter</h3>
-
-<input id="cval" placeholder="Amount">
-
-<select id="ctype">
-<option value="usd-ngn">USD → NGN</option>
-<option value="ngn-usd">NGN → USD</option>
-<option value="eur-ngn">EUR → NGN</option>
-<option value="ngn-eur">NGN → EUR</option>
-</select>
-
-<button onclick="convertCurrency()">Convert</button>
-
-<p id="cres"></p>
-
-</div>
+<button onclick="back()">⌫</button>
+<button onclick="calculate()" class="equal">=</button>
 
 </div>
 </div>
@@ -189,6 +142,7 @@ border-radius:8px;
 <script>
 
 let display=document.getElementById("display");
+let history=document.getElementById("history");
 
 function append(v){
 if(display.innerText==="0") display.innerText=v;
@@ -199,62 +153,22 @@ function clearAll(){
 display.innerText="0";
 }
 
+function back(){
+display.innerText=display.innerText.slice(0,-1)||"0";
+}
+
 function calculate(){
 try{
-display.innerText=Function('"use strict";return ('+display.innerText+')')();
+let exp=display.innerText;
+history.innerHTML+="<div>"+exp+"</div>";
+display.innerText=Function('"use strict";return ('+exp+')')();
 }catch{
 display.innerText="Error";
 }
 }
 
-function show(id){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-}
-
-/* =========================
-   WORLD UNIT CONVERTER
-========================= */
-function convertUnit(){
-let v=parseFloat(document.getElementById("uval").value);
-let t=document.getElementById("utype").value;
-let r=0;
-
-switch(t){
-
-case "km-m": r=v*1000; break;
-case "m-km": r=v/1000; break;
-
-case "kg-g": r=v*1000; break;
-case "g-kg": r=v/1000; break;
-
-case "l-ml": r=v*1000; break;
-
-case "c-f": r=(v*9/5)+32; break;
-case "f-c": r=(v-32)*5/9; break;
-
-}
-
-document.getElementById("ures").innerText="Result: "+r;
-}
-
-/* =========================
-   WORLD CURRENCY (STATIC GLOBAL RATES)
-   (structure for API upgrade later)
-========================= */
-function convertCurrency(){
-let v=parseFloat(document.getElementById("cval").value);
-let t=document.getElementById("ctype").value;
-let r=0;
-
-/* base logic (can be upgraded with API later) */
-if(t==="usd-ngn") r=v*1500;
-if(t==="ngn-usd") r=v/1500;
-
-if(t==="eur-ngn") r=v*1650;
-if(t==="ngn-eur") r=v/1650;
-
-document.getElementById("cres").innerText="Result: "+r;
+function toggleHistory(){
+history.classList.toggle("show");
 }
 
 </script>
