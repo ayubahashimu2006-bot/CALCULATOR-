@@ -3,88 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartCalc Pro X</title>
+<title>SmartCalc Pro X Ultra</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
 :root{
-  --bg:#0f172a;
-  --card:rgba(255,255,255,0.06);
-  --text:white;
-  --btn:#1e293b;
+  --bg1:#0f172a;
+  --bg2:#1e293b;
+  --card:rgba(255,255,255,0.08);
+  --text:#ffffff;
   --accent:#38bdf8;
 }
 
 body.light{
-  --bg:#f1f5f9;
-  --card:white;
-  --text:black;
-  --btn:#e2e8f0;
+  --bg1:#e2e8f0;
+  --bg2:#f8fafc;
+  --card:rgba(0,0,0,0.05);
+  --text:#0f172a;
   --accent:#0ea5e9;
 }
 
 body{
-  margin:0;
-  font-family:sans-serif;
-  background:var(--bg);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
   color:var(--text);
-  transition:0.4s;
+  transition:0.5s;
 }
 
+/* FLOATING BACKGROUND EFFECT */
+body::before{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  background:var(--accent);
+  filter:blur(120px);
+  opacity:0.3;
+  top:10%;
+  left:20%;
+  z-index:-1;
+}
+
+/* MAIN APP */
 .app{
-  max-width:420px;
-  margin:auto;
+  width:380px;
   padding:20px;
+  border-radius:25px;
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  box-shadow:0 25px 60px rgba(0,0,0,0.4);
+  animation:fadeIn 0.8s ease;
 }
 
-/* HEADER */
+@keyframes fadeIn{
+  from{transform:translateY(20px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
+}
+
+/* TOP BAR */
 .top{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:10px;
 }
 
 .top h1{
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.top button{
+  border:none;
+  background:transparent;
   font-size:20px;
+  cursor:pointer;
+  color:var(--text);
 }
 
 /* DISPLAY */
 .display{
-  font-size:40px;
+  font-size:42px;
   text-align:right;
   padding:20px;
-  margin:20px 0;
-  background:var(--card);
-  border-radius:15px;
-  backdrop-filter:blur(10px);
+  border-radius:18px;
+  background:rgba(0,0,0,0.25);
+  margin:15px 0;
   overflow-x:auto;
+  transition:0.3s;
 }
 
-/* BUTTONS */
-button{
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:var(--btn);
-  color:var(--text);
-  transition:0.2s;
-}
-
-button:hover{
-  transform:scale(1.05);
-  background:var(--accent);
-  color:black;
-}
-
-/* MODES */
+/* MODE BUTTONS */
 .modes{
   display:flex;
-  gap:5px;
-  margin-bottom:10px;
+  gap:8px;
+  margin-bottom:15px;
 }
 
 .modes button{
   flex:1;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  color:var(--text);
+  cursor:pointer;
+  transition:0.3s;
 }
+
+.modes button:hover{
+  background:var(--accent);
+  color:black;
+}
+
+/* PANELS */
+.panel{display:none;}
+.active{display:block;}
 
 /* GRID */
 .grid{
@@ -93,27 +139,60 @@ button:hover{
   gap:10px;
 }
 
-/* PANELS */
-.panel{display:none;}
-.active{display:block;}
+/* BUTTONS */
+button{
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  font-size:15px;
+  cursor:pointer;
+  transition:0.25s;
+  position:relative;
+  overflow:hidden;
+}
+
+button:hover{
+  transform:scale(1.05);
+  background:var(--accent);
+  color:black;
+}
+
+/* RIPPLE EFFECT */
+button:active::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  background:rgba(255,255,255,0.4);
+  border-radius:50%;
+  transform:scale(0);
+  animation:ripple 0.5s linear;
+}
+
+@keyframes ripple{
+  to{
+    transform:scale(3);
+    opacity:0;
+  }
+}
 
 /* INPUTS */
 input,select{
   width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
+  padding:12px;
+  margin:6px 0;
   border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  color:var(--text);
 }
 
-/* ANIMATION */
-.app{
-  animation:fade 0.6s ease-in;
-}
-
-@keyframes fade{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
+/* SMALL TEXT */
+p{
+  margin-top:10px;
+  font-weight:500;
 }
 </style>
 </head>
@@ -122,16 +201,16 @@ input,select{
 
 <div class="app">
 
-<!-- HEADER -->
+<!-- TOP -->
 <div class="top">
-  <h1>SmartCalc Pro X</h1>
-  <button onclick="toggleTheme()">🌙</button>
+  <h1>SmartCalc Pro X+</h1>
+  <button onclick="toggleTheme()">🌗</button>
 </div>
 
 <!-- DISPLAY -->
 <div class="display" id="display">0</div>
 
-<!-- MODE BUTTONS -->
+<!-- MODES -->
 <div class="modes">
   <button onclick="show('calc')">Calc</button>
   <button onclick="show('currency')">Currency</button>
@@ -168,9 +247,9 @@ input,select{
 
 <!-- CURRENCY -->
 <div id="currency" class="panel">
-  <h3>Currency Converter</h3>
+  <h3>Currency Converter 💱</h3>
 
-  <input id="amount" placeholder="Amount">
+  <input id="amount" placeholder="Enter amount">
 
   <select id="from">
     <option>USD</option>
@@ -189,15 +268,11 @@ input,select{
 
 <!-- UNIT -->
 <div id="unit" class="panel">
-  <h3>Unit Converter</h3>
+  <h3>Unit Converter 📏</h3>
 
-  <select id="unitType">
-    <option>Length (m → km)</option>
-  </select>
+  <input id="unitValue" placeholder="Enter meters">
 
-  <input id="unitValue" placeholder="Value">
-
-  <button onclick="unitConvert()">Convert</button>
+  <button onclick="unitConvert()">Convert to KM</button>
 
   <p id="unitResult"></p>
 </div>
@@ -205,9 +280,8 @@ input,select{
 </div>
 
 <script>
-let display = document.getElementById("display");
+let display=document.getElementById("display");
 
-/* CALC */
 function add(v){
   if(display.innerText==="0") display.innerText=v;
   else display.innerText+=v;
@@ -215,50 +289,39 @@ function add(v){
 
 function calc(){
   try{
-    display.innerText = eval(display.innerText);
+    display.innerText=Function("return "+display.innerText)();
   }catch{
     display.innerText="Error";
   }
 }
 
-function clearAll(){
-  display.innerText="0";
-}
+function clearAll(){display.innerText="0";}
+function back(){display.innerText=display.innerText.slice(0,-1)||"0";}
 
-function back(){
-  display.innerText = display.innerText.slice(0,-1) || "0";
-}
-
-/* MODE SWITCH */
 function show(id){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* THEME */
 function toggleTheme(){
   document.body.classList.toggle("light");
 }
 
-/* CURRENCY */
+/* FAKE PREMIUM CONVERTER */
 function convert(){
   let amt=document.getElementById("amount").value;
   let from=document.getElementById("from").value;
-  let to=document.getElementById("to").value;
 
   let rate=1500;
 
-  if(from==="USD" && to==="NGN"){
-    document.getElementById("result").innerText=amt*rate+" NGN";
-  }else{
-    document.getElementById("result").innerText=amt/rate+" USD";
-  }
+  document.getElementById("result").innerText =
+  from==="USD" ? amt*rate+" NGN" : amt/rate+" USD";
 }
 
 /* UNIT */
 function unitConvert(){
-  let val=document.getElementById("unitValue").value;
-  document.getElementById("unitResult").innerText=val/1000+" km";
+  let v=document.getElementById("unitValue").value;
+  document.getElementById("unitResult").innerText=(v/1000)+" KM";
 }
 </script>
 
