@@ -1,314 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartCalc Pro X V4</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ultra Pro Scientific Calculator</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-:root{
-  --bg1:#050816;
-  --bg2:#0f172a;
-  --card:rgba(255,255,255,0.07);
-  --text:#fff;
-  --accent:#00d4ff;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
-body.light{
-  --bg1:#e2e8f0;
-  --bg2:#f8fafc;
-  --card:rgba(0,0,0,0.05);
-  --text:#0f172a;
-  --accent:#2563eb;
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #111827, #030712);
 }
 
-body{
-  margin:0;
-  font-family:Poppins,sans-serif;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
+.calculator {
+    width: 380px;
+    border-radius: 25px;
+    padding: 18px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* glow */
-body::before{
-  content:"";
-  position:absolute;
-  width:400px;
-  height:400px;
-  background:var(--accent);
-  filter:blur(140px);
-  opacity:0.25;
-  z-index:-1;
+.header {
+    display: flex;
+    justify-content: space-between;
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 10px;
 }
 
-/* APP */
-.app{
-  width:400px;
-  padding:18px;
-  border-radius:25px;
-  background:var(--card);
-  backdrop-filter:blur(25px);
-  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+.display {
+    height: 90px;
+    border-radius: 15px;
+    background: rgba(0,0,0,0.7);
+    color: #00f7ff;
+    font-size: 30px;
+    padding: 15px;
+    text-align: right;
+    overflow-x: auto;
 }
 
-/* TOP */
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.history {
+    height: 20px;
+    font-size: 12px;
+    color: #888;
+    text-align: right;
+    margin-bottom: 8px;
 }
 
-.top h1{
-  font-size:16px;
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.top button{
-  background:none;
-  border:none;
-  font-size:20px;
-  color:var(--text);
-  cursor:pointer;
+button {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.15s ease-in-out;
 }
 
-/* DISPLAY */
-.display{
-  font-size:40px;
-  text-align:right;
-  padding:18px;
-  margin:15px 0;
-  border-radius:15px;
-  background:rgba(0,0,0,0.3);
-  overflow-x:auto;
+button:hover {
+    background: #00f7ff;
+    color: black;
+    transform: scale(1.05);
 }
 
-.history{
-  font-size:12px;
-  opacity:0.6;
-  text-align:right;
+.operator {
+    color: #00f7ff;
 }
 
-/* MODE */
-.modes{
-  display:flex;
-  gap:6px;
-  margin:10px 0;
+.equal {
+    grid-column: span 2;
+    background: #00f7ff;
+    color: black;
+    font-weight: bold;
 }
 
-.modes button{
-  flex:1;
-  padding:8px;
-  border:none;
-  border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  color:var(--text);
-}
-
-/* PANELS */
-.panel{display:none;}
-.active{display:block;}
-
-/* SCIENTIFIC GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:6px;
-}
-
-/* BUTTONS */
-button{
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.08);
-  color:var(--text);
-  font-size:13px;
-  transition:0.2s;
-}
-
-button:hover{
-  transform:scale(1.05);
-  background:var(--accent);
-  color:black;
-}
-
-/* BIG EQUAL */
-.equal{
-  width:100%;
-  margin-top:10px;
-  padding:16px;
-  font-size:18px;
-  font-weight:700;
-  background:var(--accent);
-  color:black;
-  border-radius:15px;
-}
-
-/* INPUTS */
-input,select{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border:none;
-  border-radius:10px;
+.equal:hover {
+    background: #00c2cc;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="calculator">
 
-<!-- TOP -->
-<div class="top">
-  <h1>SmartCalc Pro X ⚡ V4</h1>
-  <button onclick="theme()">🌗</button>
-</div>
+    <div class="header">
+        <div>Scientific Pro Mode</div>
+        <div>Ultra UI</div>
+    </div>
 
-<div class="history" id="history"></div>
-<div class="display" id="display">0</div>
+    <div class="history" id="history"></div>
+    <div class="display" id="display">0</div>
 
-<!-- MODES -->
-<div class="modes">
-  <button onclick="show('calc')">Calc</button>
-  <button onclick="show('currency')">FX</button>
-  <button onclick="show('unit')">Unit</button>
-</div>
+    <div class="buttons">
 
-<!-- SCIENTIFIC CALC -->
-<div id="calc" class="panel active">
-  <div class="grid">
+        <!-- Row 1 -->
+        <button onclick="clearDisplay()">AC</button>
+        <button onclick="backspace()">⌫</button>
+        <button onclick="append('%')">%</button>
+        <button onclick="append('/')">÷</button>
+        <button onclick="append('**')">xʸ</button>
 
-    <button onclick="add('Math.sin(')">sin</button>
-    <button onclick="add('Math.cos(')">cos</button>
-    <button onclick="add('Math.tan(')">tan</button>
-    <button onclick="add('Math.log10(')">log</button>
-    <button onclick="add('(')">(</button>
+        <!-- Row 2 -->
+        <button onclick="append('Math.sin(')">sin</button>
+        <button onclick="append('Math.cos(')">cos</button>
+        <button onclick="append('Math.tan(')">tan</button>
+        <button onclick="append('Math.sqrt(')">√</button>
+        <button onclick="append('Math.log10(')">log</button>
 
-    <button onclick="add('7')">7</button>
-    <button onclick="add('8')">8</button>
-    <button onclick="add('9')">9</button>
-    <button onclick="add('/')">÷</button>
-    <button onclick="add(')')">)</button>
+        <!-- Row 3 -->
+        <button onclick="append('Math.log(')">ln</button>
+        <button onclick="append('Math.PI')">π</button>
+        <button onclick="append('Math.E')">e</button>
+        <button onclick="append('(')">(</button>
+        <button onclick="append(')')">)</button>
 
-    <button onclick="add('4')">4</button>
-    <button onclick="add('5')">5</button>
-    <button onclick="add('6')">6</button>
-    <button onclick="add('*')">×</button>
-    <button onclick="add('Math.sqrt(')">√</button>
+        <!-- Row 4 -->
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button onclick="append('*')">×</button>
+        <button onclick="append('/')">÷</button>
 
-    <button onclick="add('1')">1</button>
-    <button onclick="add('2')">2</button>
-    <button onclick="add('3')">3</button>
-    <button onclick="add('-')">−</button>
-    <button onclick="add('Math.pow(')">xʸ</button>
+        <!-- Row 5 -->
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button onclick="append('-')">−</button>
+        <button onclick="append('+')">+</button>
 
-    <button onclick="add('0')">0</button>
-    <button onclick="add('.')">.</button>
-    <button onclick="add('+')">+</button>
-    <button onclick="clearAll()">C</button>
-    <button onclick="back()">⌫</button>
+        <!-- Row 6 -->
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button onclick="append('.')">.</button>
+        <button onclick="append('0')">0</button>
 
-  </div>
-
-  <button class="equal" onclick="calc()">=</button>
-</div>
-
-<!-- CURRENCY -->
-<div id="currency" class="panel">
-  <h3>Global Currency 🌍</h3>
-
-  <input id="amount" placeholder="Amount">
-
-  <select id="from">
-    <option>USD</option>
-    <option>EUR</option>
-    <option>GBP</option>
-    <option>NGN</option>
-  </select>
-
-  <select id="to">
-    <option>NGN</option>
-    <option>USD</option>
-    <option>EUR</option>
-    <option>GBP</option>
-  </select>
-
-  <button onclick="convert()">Convert</button>
-  <p id="result"></p>
-</div>
-
-<!-- UNIT -->
-<div id="unit" class="panel">
-  <h3>Global Unit Converter 📏⚖️</h3>
-
-  <select>
-    <option>Length</option>
-    <option>Mass</option>
-    <option>Volume</option>
-    <option>Speed</option>
-    <option>Energy</option>
-  </select>
-
-  <input id="uval" placeholder="Value">
-
-  <button onclick="unit()">Convert</button>
-  <p id="ures"></p>
-</div>
-
+        <!-- Equal -->
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
 </div>
 
 <script>
+let display = document.getElementById("display");
+let history = document.getElementById("history");
 
-let display=document.getElementById("display");
-let history=document.getElementById("history");
-
-function add(v){
-  if(display.innerText==="0") display.innerText=v;
-  else display.innerText+=v;
+function append(value) {
+    if (display.innerText === "0") {
+        display.innerText = value;
+    } else {
+        display.innerText += value;
+    }
 }
 
-function calc(){
-  try{
-    history.innerText=display.innerText;
-    display.innerText=Function("return "+display.innerText)();
-  }catch{
-    display.innerText="Error";
-  }
+function clearDisplay() {
+    display.innerText = "0";
+    history.innerText = "";
 }
 
-function clearAll(){display.innerText="0";}
-function back(){display.innerText=display.innerText.slice(0,-1)||"0";}
-
-/* MODE */
-function show(id){
-  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+function backspace() {
+    display.innerText = display.innerText.slice(0, -1) || "0";
 }
 
-/* THEME */
-function theme(){
-  document.body.classList.toggle("light");
+/* safer evaluation than eval */
+function calculate() {
+    try {
+        history.innerText = display.innerText;
+
+        let result = Function('"use strict"; return (' + display.innerText + ')')();
+
+        display.innerText = result;
+    } catch (e) {
+        display.innerText = "Error";
+    }
 }
 
-/* CURRENCY (demo global UI) */
-function convert(){
-  let a=document.getElementById("amount").value;
-  let rate=1500;
-  document.getElementById("result").innerText=a*rate+" NGN (demo)";
-}
-
-/* UNIT (basic global placeholder) */
-function unit(){
-  let v=document.getElementById("uval").value;
-  document.getElementById("ures").innerText="Converted: "+(v/1000);
-}
-
+/* keyboard support */
+document.addEventListener("keydown", (e) => {
+    if (!isNaN(e.key) || "+-*/.%()".includes(e.key)) {
+        append(e.key);
+    }
+    if (e.key === "Enter") calculate();
+    if (e.key === "Backspace") backspace();
+    if (e.key === "Escape") clearDisplay();
+});
 </script>
 
 </body>
