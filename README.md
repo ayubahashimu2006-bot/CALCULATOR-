@@ -1,2 +1,18 @@
 # CALCULATOR-
-“A sleek ultra-modern scientific calculator web app with advanced functions, glassmorphism UI design, and full keyboard support. Built for fast, accurate, and intuitive calculations on all devices.”
+A professional multi-tool calculator web application.
+
+## Features
+- Scientific calculator
+- Unit converter
+- Currency converter
+- Modular architecture
+- Responsive UI
+- Offline support
+
+## Tech Stack
+- HTML
+- CSS
+- JavaScript (ES6 Modules)
+
+## Author
+Student Project - Cyber Security / Computer Science Practice
