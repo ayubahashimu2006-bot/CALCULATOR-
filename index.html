@@ -3,17 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartCalc Pro X World Edition</title>
+<title>SmartCalc Pro X V4</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Poppins,sans-serif;
-}
 
 :root{
   --bg1:#050816;
@@ -32,21 +25,22 @@ body.light{
 }
 
 body{
-  min-height:100vh;
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
-  color:var(--text);
-  transition:0.4s;
+  min-height:100vh;
 }
 
-/* BACKGROUND GLOW */
+/* glow */
 body::before{
   content:"";
   position:absolute;
-  width:350px;
-  height:350px;
+  width:400px;
+  height:400px;
   background:var(--accent);
   filter:blur(140px);
   opacity:0.25;
@@ -55,18 +49,12 @@ body::before{
 
 /* APP */
 .app{
-  width:390px;
+  width:400px;
   padding:18px;
   border-radius:25px;
   background:var(--card);
   backdrop-filter:blur(25px);
-  box-shadow:0 30px 80px rgba(0,0,0,0.5);
-  animation:fade 0.7s ease;
-}
-
-@keyframes fade{
-  from{transform:translateY(20px);opacity:0;}
-  to{transform:translateY(0);opacity:1;}
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
 }
 
 /* TOP */
@@ -74,38 +62,35 @@ body::before{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
 }
 
 .top h1{
   font-size:16px;
-  letter-spacing:1px;
 }
 
 .top button{
+  background:none;
   border:none;
-  background:transparent;
   font-size:20px;
   color:var(--text);
+  cursor:pointer;
 }
 
 /* DISPLAY */
 .display{
-  font-size:42px;
+  font-size:40px;
   text-align:right;
   padding:18px;
-  border-radius:18px;
+  margin:15px 0;
+  border-radius:15px;
   background:rgba(0,0,0,0.3);
-  margin-bottom:10px;
   overflow-x:auto;
 }
 
-/* HISTORY */
 .history{
   font-size:12px;
   opacity:0.6;
   text-align:right;
-  height:18px;
 }
 
 /* MODE */
@@ -117,7 +102,7 @@ body::before{
 
 .modes button{
   flex:1;
-  padding:9px;
+  padding:8px;
   border:none;
   border-radius:10px;
   background:rgba(255,255,255,0.08);
@@ -128,21 +113,21 @@ body::before{
 .panel{display:none;}
 .active{display:block;}
 
-/* GRID */
+/* SCIENTIFIC GRID */
 .grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
 }
 
 /* BUTTONS */
 button{
-  padding:14px;
+  padding:12px;
   border:none;
-  border-radius:14px;
+  border-radius:12px;
   background:rgba(255,255,255,0.08);
   color:var(--text);
-  font-size:15px;
+  font-size:13px;
   transition:0.2s;
 }
 
@@ -152,13 +137,16 @@ button:hover{
   color:black;
 }
 
-/* BOTTOM EQUAL BUTTON */
+/* BIG EQUAL */
 .equal{
-  grid-column:span 4;
+  width:100%;
+  margin-top:10px;
+  padding:16px;
+  font-size:18px;
+  font-weight:700;
   background:var(--accent);
   color:black;
-  font-weight:700;
-  font-size:18px;
+  border-radius:15px;
 }
 
 /* INPUTS */
@@ -168,8 +156,6 @@ input,select{
   margin:5px 0;
   border:none;
   border-radius:10px;
-  background:rgba(255,255,255,0.1);
-  color:var(--text);
 }
 </style>
 </head>
@@ -178,47 +164,59 @@ input,select{
 
 <div class="app">
 
+<!-- TOP -->
 <div class="top">
-  <h1>SmartCalc Pro X 🌍</h1>
-  <button onclick="toggleTheme()">🌗</button>
+  <h1>SmartCalc Pro X ⚡ V4</h1>
+  <button onclick="theme()">🌗</button>
 </div>
 
 <div class="history" id="history"></div>
 <div class="display" id="display">0</div>
 
+<!-- MODES -->
 <div class="modes">
   <button onclick="show('calc')">Calc</button>
   <button onclick="show('currency')">FX</button>
-  <button onclick="show('unit')">Units</button>
+  <button onclick="show('unit')">Unit</button>
 </div>
 
-<!-- CALCULATOR -->
+<!-- SCIENTIFIC CALC -->
 <div id="calc" class="panel active">
   <div class="grid">
+
+    <button onclick="add('Math.sin(')">sin</button>
+    <button onclick="add('Math.cos(')">cos</button>
+    <button onclick="add('Math.tan(')">tan</button>
+    <button onclick="add('Math.log10(')">log</button>
+    <button onclick="add('(')">(</button>
 
     <button onclick="add('7')">7</button>
     <button onclick="add('8')">8</button>
     <button onclick="add('9')">9</button>
     <button onclick="add('/')">÷</button>
+    <button onclick="add(')')">)</button>
 
     <button onclick="add('4')">4</button>
     <button onclick="add('5')">5</button>
     <button onclick="add('6')">6</button>
     <button onclick="add('*')">×</button>
+    <button onclick="add('Math.sqrt(')">√</button>
 
     <button onclick="add('1')">1</button>
     <button onclick="add('2')">2</button>
     <button onclick="add('3')">3</button>
     <button onclick="add('-')">−</button>
+    <button onclick="add('Math.pow(')">xʸ</button>
 
     <button onclick="add('0')">0</button>
     <button onclick="add('.')">.</button>
+    <button onclick="add('+')">+</button>
     <button onclick="clearAll()">C</button>
     <button onclick="back()">⌫</button>
 
-    <button class="equal" onclick="calc()">=</button>
-
   </div>
+
+  <button class="equal" onclick="calc()">=</button>
 </div>
 
 <!-- CURRENCY -->
@@ -228,11 +226,17 @@ input,select{
   <input id="amount" placeholder="Amount">
 
   <select id="from">
-    <option>USD</option><option>EUR</option><option>GBP</option><option>NGN</option>
+    <option>USD</option>
+    <option>EUR</option>
+    <option>GBP</option>
+    <option>NGN</option>
   </select>
 
   <select id="to">
-    <option>NGN</option><option>USD</option><option>EUR</option><option>GBP</option>
+    <option>NGN</option>
+    <option>USD</option>
+    <option>EUR</option>
+    <option>GBP</option>
   </select>
 
   <button onclick="convert()">Convert</button>
@@ -251,10 +255,10 @@ input,select{
     <option>Energy</option>
   </select>
 
-  <input id="unitValue" placeholder="Value">
+  <input id="uval" placeholder="Value">
 
-  <button onclick="unitConvert()">Convert</button>
-  <p id="unitResult"></p>
+  <button onclick="unit()">Convert</button>
+  <p id="ures"></p>
 </div>
 
 </div>
@@ -264,7 +268,6 @@ input,select{
 let display=document.getElementById("display");
 let history=document.getElementById("history");
 
-/* CALC */
 function add(v){
   if(display.innerText==="0") display.innerText=v;
   else display.innerText+=v;
@@ -282,37 +285,28 @@ function calc(){
 function clearAll(){display.innerText="0";}
 function back(){display.innerText=display.innerText.slice(0,-1)||"0";}
 
-/* HISTORY BUTTON (simple memory) */
-function showHistory(){
-  alert("Last: " + history.innerText);
-}
-
-/* MODE SWITCH */
+/* MODE */
 function show(id){
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
 /* THEME */
-function toggleTheme(){
+function theme(){
   document.body.classList.toggle("light");
 }
 
-/* GLOBAL FX (demo logic) */
+/* CURRENCY (demo global UI) */
 function convert(){
-  let amt=document.getElementById("amount").value;
-  let from=document.getElementById("from").value;
+  let a=document.getElementById("amount").value;
   let rate=1500;
-
-  document.getElementById("result").innerText=
-  from==="USD" ? amt*rate+" NGN" : amt/rate+" USD";
+  document.getElementById("result").innerText=a*rate+" NGN (demo)";
 }
 
-/* UNIT (GLOBAL SIMPLIFIED ENGINE) */
-function unitConvert(){
-  let v=document.getElementById("unitValue").value;
-  document.getElementById("unitResult").innerText=
-  "Converted Value: " + (v/1000);
+/* UNIT (basic global placeholder) */
+function unit(){
+  let v=document.getElementById("uval").value;
+  document.getElementById("ures").innerText="Converted: "+(v/1000);
 }
 
 </script>
