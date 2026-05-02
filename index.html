@@ -3,176 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Calculator</title>
+<title>SmartCalc Pro X</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+:root{
+  --bg:#0f172a;
+  --card:rgba(255,255,255,0.06);
+  --text:white;
+  --btn:#1e293b;
+  --accent:#38bdf8;
 }
 
-body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+body.light{
+  --bg:#f1f5f9;
+  --card:white;
+  --text:black;
+  --btn:#e2e8f0;
+  --accent:#0ea5e9;
 }
 
-.calculator {
-    width: 350px;
-    padding: 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    background: rgba(255,255,255,0.05);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:0.4s;
 }
 
-.display {
-    width: 100%;
-    height: 80px;
-    border-radius: 15px;
-    background: rgba(0,0,0,0.6);
-    color: #0ff;
-    font-size: 28px;
-    text-align: right;
-    padding: 15px;
-    margin-bottom: 10px;
-    overflow-x: auto;
+.app{
+  max-width:420px;
+  margin:auto;
+  padding:20px;
 }
 
-.history {
-    font-size: 14px;
-    color: #aaa;
-    text-align: right;
-    height: 20px;
-    margin-bottom: 10px;
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+.top h1{
+  font-size:20px;
 }
 
-button {
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.2s;
+/* DISPLAY */
+.display{
+  font-size:40px;
+  text-align:right;
+  padding:20px;
+  margin:20px 0;
+  background:var(--card);
+  border-radius:15px;
+  backdrop-filter:blur(10px);
+  overflow-x:auto;
 }
 
-button:hover {
-    background: #00ffff;
-    color: black;
-    transform: scale(1.05);
+/* BUTTONS */
+button{
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:var(--btn);
+  color:var(--text);
+  transition:0.2s;
 }
 
-.operator {
-    color: #00ffff;
+button:hover{
+  transform:scale(1.05);
+  background:var(--accent);
+  color:black;
 }
 
-.equal {
-    grid-column: span 2;
-    background: #00ffff;
-    color: black;
-    font-weight: bold;
+/* MODES */
+.modes{
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
 }
 
-.equal:hover {
-    background: #00cccc;
+.modes button{
+  flex:1;
 }
 
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+/* PANELS */
+.panel{display:none;}
+.active{display:block;}
+
+/* INPUTS */
+input,select{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+
+/* ANIMATION */
+.app{
+  animation:fade 0.6s ease-in;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
 </style>
 </head>
 
 <body>
 
-<div class="calculator">
-    <div class="history" id="history"></div>
-    <div class="display" id="display">0</div>
+<div class="app">
 
-    <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="backspace()">⌫</button>
-        <button onclick="append('%')">%</button>
-        <button onclick="append('/')">÷</button>
-        <button onclick="append('Math.sqrt(')">√</button>
+<!-- HEADER -->
+<div class="top">
+  <h1>SmartCalc Pro X</h1>
+  <button onclick="toggleTheme()">🌙</button>
+</div>
 
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button onclick="append('*')">×</button>
-        <button onclick="append('Math.pow(')">xʸ</button>
+<!-- DISPLAY -->
+<div class="display" id="display">0</div>
 
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button onclick="append('-')">−</button>
-        <button onclick="append('Math.log10(')">log</button>
+<!-- MODE BUTTONS -->
+<div class="modes">
+  <button onclick="show('calc')">Calc</button>
+  <button onclick="show('currency')">Currency</button>
+  <button onclick="show('unit')">Unit</button>
+</div>
 
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button onclick="append('+')">+</button>
-        <button onclick="append('Math.sin(')">sin</button>
+<!-- CALCULATOR -->
+<div id="calc" class="panel active">
+  <div class="grid">
+    <button onclick="add('7')">7</button>
+    <button onclick="add('8')">8</button>
+    <button onclick="add('9')">9</button>
+    <button onclick="add('/')">÷</button>
 
-        <button onclick="append('0')">0</button>
-        <button onclick="append('.')">.</button>
-        <button onclick="append(')')">)</button>
-        <button onclick="append('Math.cos(')">cos</button>
-        <button onclick="append('Math.tan(')">tan</button>
+    <button onclick="add('4')">4</button>
+    <button onclick="add('5')">5</button>
+    <button onclick="add('6')">6</button>
+    <button onclick="add('*')">×</button>
 
-        <button class="equal" onclick="calculate()">=</button>
-    </div>
+    <button onclick="add('1')">1</button>
+    <button onclick="add('2')">2</button>
+    <button onclick="add('3')">3</button>
+    <button onclick="add('-')">−</button>
+
+    <button onclick="add('0')">0</button>
+    <button onclick="add('.')">.</button>
+    <button onclick="calc()">=</button>
+    <button onclick="add('+')">+</button>
+
+    <button onclick="clearAll()">C</button>
+    <button onclick="back()">⌫</button>
+  </div>
+</div>
+
+<!-- CURRENCY -->
+<div id="currency" class="panel">
+  <h3>Currency Converter</h3>
+
+  <input id="amount" placeholder="Amount">
+
+  <select id="from">
+    <option>USD</option>
+    <option>NGN</option>
+  </select>
+
+  <select id="to">
+    <option>NGN</option>
+    <option>USD</option>
+  </select>
+
+  <button onclick="convert()">Convert</button>
+
+  <p id="result"></p>
+</div>
+
+<!-- UNIT -->
+<div id="unit" class="panel">
+  <h3>Unit Converter</h3>
+
+  <select id="unitType">
+    <option>Length (m → km)</option>
+  </select>
+
+  <input id="unitValue" placeholder="Value">
+
+  <button onclick="unitConvert()">Convert</button>
+
+  <p id="unitResult"></p>
+</div>
+
 </div>
 
 <script>
 let display = document.getElementById("display");
-let history = document.getElementById("history");
 
-function append(value) {
-    if (display.innerText === "0") {
-        display.innerText = value;
-    } else {
-        display.innerText += value;
-    }
+/* CALC */
+function add(v){
+  if(display.innerText==="0") display.innerText=v;
+  else display.innerText+=v;
 }
 
-function clearDisplay() {
-    display.innerText = "0";
-    history.innerText = "";
+function calc(){
+  try{
+    display.innerText = eval(display.innerText);
+  }catch{
+    display.innerText="Error";
+  }
 }
 
-function backspace() {
-    display.innerText = display.innerText.slice(0, -1) || "0";
+function clearAll(){
+  display.innerText="0";
 }
 
-function calculate() {
-    try {
-        history.innerText = display.innerText;
-        let result = eval(display.innerText);
-        display.innerText = result;
-    } catch {
-        display.innerText = "Error";
-    }
+function back(){
+  display.innerText = display.innerText.slice(0,-1) || "0";
 }
 
-/* Keyboard Support */
-document.addEventListener("keydown", function(e) {
-    if (!isNaN(e.key) || "+-*/.%".includes(e.key)) {
-        append(e.key);
-    }
-    if (e.key === "Enter") calculate();
-    if (e.key === "Backspace") backspace();
-    if (e.key === "Escape") clearDisplay();
-});
+/* MODE SWITCH */
+function show(id){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* THEME */
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
+
+/* CURRENCY */
+function convert(){
+  let amt=document.getElementById("amount").value;
+  let from=document.getElementById("from").value;
+  let to=document.getElementById("to").value;
+
+  let rate=1500;
+
+  if(from==="USD" && to==="NGN"){
+    document.getElementById("result").innerText=amt*rate+" NGN";
+  }else{
+    document.getElementById("result").innerText=amt/rate+" USD";
+  }
+}
+
+/* UNIT */
+function unitConvert(){
+  let val=document.getElementById("unitValue").value;
+  document.getElementById("unitResult").innerText=val/1000+" km";
+}
 </script>
 
 </body>
